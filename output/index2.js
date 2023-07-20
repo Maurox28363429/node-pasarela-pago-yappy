@@ -67,11 +67,6 @@ var cors_1 = __importDefault(require("cors"));
 var yappy = __importStar(require("yappy-node-back-sdk"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var fs_1 = __importDefault(require("fs"));
-fs_1.default.writeFile('nombre-archivo.txt', 'Contenido del archivo', function (err) {
-    if (err)
-        throw err;
-    console.log('Archivo creado exitosamente');
-});
 var app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());

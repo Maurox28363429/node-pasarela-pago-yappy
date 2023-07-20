@@ -15,7 +15,7 @@ var App = /** @class */ (function () {
         this.initialize();
     }
     App.prototype.initialize = function () {
-        this.app.set("port", this.port || process.env.PORT || 3000);
+        this.app.set("port", this.port || process.env.PORT || 4200);
         this.middleware();
         this.routes();
     };

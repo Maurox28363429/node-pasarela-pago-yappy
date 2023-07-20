@@ -8,11 +8,11 @@ export class PagosBgRoutes {
 
   public routes(app: Application): void {
     app
-      .route("/api/pagosbgurl")
+      .route("/pagosbgurl")
       .post((req, res) => this.pagosbg.getUrl(req, res));
 
     app
-      .route("/api/pagosbg")
+      .route("/pagosbg")
       .get((req: Request<any, any, any, ValidatorParams>, res) =>
         this.pagosbg.updateOrderStatus(req, res)
       );

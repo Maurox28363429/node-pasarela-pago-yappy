@@ -12,10 +12,10 @@ var PagosBgRoutes = /** @class */ (function () {
     PagosBgRoutes.prototype.routes = function (app) {
         var _this = this;
         app
-            .route("/api/pagosbgurl")
+            .route("/pagosbgurl")
             .post(function (req, res) { return _this.pagosbg.getUrl(req, res); });
         app
-            .route("/api/pagosbg")
+            .route("/pagosbg")
             .get(function (req, res) {
             return _this.pagosbg.updateOrderStatus(req, res);
         });

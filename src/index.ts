@@ -22,34 +22,28 @@ app.use(
 
 dotenv.config();
 
-const yappyClient = yappy.createClient(
-  "6f8bd0f8-cadd-4c38-9eae-3341d3abeeca",
-  "QkdfbjVRbTJub21NajFGTDdyRUh1ZWUuM0FkVWdXQmc2SEhRb0Q4V1pQdXdJZkpqOGJrNzBiU1BPeXZubHJxdA=="
-);
-
 app.post(
   "/pagosbgurl",
   async (req: Request, res: Response) => {
-    const data = Request
+    const data = req.body;
     const yappyClient = yappy.createClient(
-      "6f8bd0f8-cadd-4c38-9eae-3341d3abeeca",
-      "QkdfbjVRbTJub21NajFGTDdyRUh1ZWUuM0FkVWdXQmc2SEhRb0Q4V1pQdXdJZkpqOGJrNzBiU1BPeXZubHJxdA=="
+      data.clientId,
+      data.clientSecret
     );
     const payment= {
-      total: 1.17,
-      subtotal: 1.00,
-      shipping: 0.00,
-      discount: 0.00,
-      taxes: 0.17,
-      orderId: '1234',
-      successUrl: 'https://yappymicroservicio.phoenixtechsa.com',
-      failUrl: 'https://yappymicroservicio.phoenixtechsa.com',
-      tel: '61122345',
+      total: data.total,
+      subtotal: data.subtotal,
+      shipping: data.shipping,
+      discount: data.discount,
+      taxes: data.taxes,
+      orderId: data.orderId,
+      successUrl: data.successUrl,
+      failUrl: data.failUrl,
+      tel: data.tel,
       domain: 'https://yappymicroservicio.phoenixtechsa.com',
     }
     console.log(payment)
 
-      
     const response = await yappyClient.getPaymentUrl(payment);
     if (!response.success) {
       res.status(500).send(response);

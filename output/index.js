@@ -63,9 +63,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var nodemailer_1 = __importDefault(require("nodemailer"));
 var cors_1 = __importDefault(require("cors"));
 var yappy = __importStar(require("yappy-node-back-sdk"));
 var dotenv_1 = __importDefault(require("dotenv"));
+// Create a transporter object using SMTP
+var transporter = nodemailer_1.default.createTransport({
+    host: 'mail.mauricioreyesdev.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'info@mauricioreyesdev.com',
+        pass: 'Maurox$123' // Your email password
+    }
+});
 var app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -73,22 +84,44 @@ app.use(express_1.default.urlencoded({
     extended: true,
 }));
 dotenv_1.default.config();
-var yappyClient = yappy.createClient("6f8bd0f8-cadd-4c38-9eae-3341d3abeeca", "QkdfbjVRbTJub21NajFGTDdyRUh1ZWUuM0FkVWdXQmc2SEhRb0Q4V1pQdXdJZkpqOGJrNzBiU1BPeXZubHJxdA==");
-app.get("/pagosbgurl", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var payment, response;
+app.post('/mailer', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, mailOptions;
+    return __generator(this, function (_a) {
+        data = req.body;
+        mailOptions = {
+            from: data.email,
+            to: data.to,
+            subject: data.subject,
+            html: data.html // html body
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                res.status(500).send(error.message);
+            }
+            else {
+                res.send(info);
+            }
+        });
+        return [2 /*return*/];
+    });
+}); });
+app.post("/pagosbgurl", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, yappyClient, payment, response;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                data = req.body;
+                yappyClient = yappy.createClient(data.clientId, data.clientSecret);
                 payment = {
-                    total: 1.17,
-                    subtotal: 1.00,
-                    shipping: 0.00,
-                    discount: 0.00,
-                    taxes: 0.17,
-                    orderId: '1234',
-                    successUrl: 'https://yappymicroservicio.phoenixtechsa.com',
-                    failUrl: 'https://yappymicroservicio.phoenixtechsa.com',
-                    tel: '61122345',
+                    total: data.total,
+                    subtotal: data.subtotal,
+                    shipping: data.shipping,
+                    discount: data.discount,
+                    taxes: data.taxes,
+                    orderId: data.orderId,
+                    successUrl: data.successUrl,
+                    failUrl: data.failUrl,
+                    tel: data.tel,
                     domain: 'https://yappymicroservicio.phoenixtechsa.com',
                 };
                 console.log(payment);
@@ -105,12 +138,15 @@ app.get("/pagosbgurl", function (req, res) { return __awaiter(void 0, void 0, vo
         }
     });
 }); });
-app.post("/pagosbg", function (req, res) {
-    var success = yappyClient.validateHash(req.query);
+/* app.post(
+  "/pagosbg",
+  (req: Request<any, any, any, ValidatorParams>, res: Response) => {
+    const success = yappyClient.validateHash(req.query);
     if (success) {
-        //Your bussiness logic
-        console.log(success);
+      //Your bussiness logic
+    console.log(success);
     }
-});
+  }
+); */
 var port = 4200;
 app.listen(port, function () { return console.log("Listening on port ".concat(port)); });
